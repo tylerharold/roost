@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap');
+
 @theme {
   --color-neutral-50: oklch(0.966 0.008 224.96);
   --color-neutral-100: oklch(0.921 0.02 225.68);
