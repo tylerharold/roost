@@ -10,9 +10,10 @@
 import router from '@adonisjs/core/services/router'
 
 import InstallController from '#controllers/installer/install_controller'
+import HomeController from '#controllers/home_controller'
 
-router.on('/').renderInertia('home')
-router.on('/install').renderInertia('install')
+router.get('/', [HomeController])
+router.get('/install', [InstallController, 'view'])
 
 // API
 router.group(() => {
