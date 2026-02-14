@@ -17,7 +17,6 @@ export const createUserValidator = vine.compile(
       .maxLength(64)
       .regex(/^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~`]+$/),
     role: vine
-      .string()
-      .regex(/^(guest|member|moderator|admin|owner)$/),
+      .enum(['guest', 'member', 'moderator', 'admin', 'owner'] as const)
   })
 )
