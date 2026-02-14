@@ -27,10 +27,10 @@ export default class InstallController {
       )
 
       // Update server settings
-      await this.serverService.updateSetting('SERVER_NAME', payload.server_name, { client: _tx })
+      await this.serverService.updateSetting('SERVER_NAME', payload.server.name, { client: _tx })
       await this.serverService.updateSetting(
         'SERVER_DESCRIPTION',
-        payload.server_description || '',
+        payload.server.description || '',
         { client: _tx }
       )
 
