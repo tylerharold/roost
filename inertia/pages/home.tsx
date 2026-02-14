@@ -1,5 +1,5 @@
 import { Head } from '@inertiajs/react'
-import { Input, Label, Panel, PrimaryButton, SecondaryButton, Switch } from '~/components/ui'
+import { Panel } from '~/components/ui'
 
 export default function Home() {
   return (
