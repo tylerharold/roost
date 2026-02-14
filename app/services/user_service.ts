@@ -1,29 +1,49 @@
-import User, { UserRole } from "#models/user"
-import { createUserValidator } from "#validators/user"
-import db from "@adonisjs/lucid/services/db"
+import User from '#models/user'
+import { createUserValidator } from '#validators/user'
+import db from '@adonisjs/lucid/services/db'
+import hash from '@adonisjs/core/services/hash'
 
 export type CreateUserInput = {
   username: string
   password: string
-  role: UserRole,
+  role?: 'guest' | 'member' | 'moderator' | 'admin' | 'owner'
 }
 
 export default class UserService {
-  public async createUser(input: CreateUserInput) {
-    const payload = await createUserValidator.validate(input);
+  public async createUser(input: CreateUserInput, options?: { client?: any }) {
+    const payload = await createUserValidator.validate(input)
+    const role = (payload.role || input.role || 'guest') as
+      | 'guest'
+      | 'member'
+      | 'moderator'
+      | 'admin'
+      | 'owner'
 
-    return db.transaction(async (tx) => {
+    // Use provided transaction client or start new transaction
+    if (options?.client) {
       const user = await User.create(
         {
           username: payload.username,
           displayName: payload.username,
-          password: payload.password,
-          role: payload.role,
+          password: await hash.make(payload.password),
+          role,
         },
-        { client: tx }
+        { client: options.client }
       )
-
-      return user;
-    })
+      return user
+    } else {
+      return db.transaction(async (tx) => {
+        const user = await User.create(
+          {
+            username: payload.username,
+            displayName: payload.username,
+            password: await hash.make(payload.password),
+            role,
+          },
+          { client: tx }
+        )
+        return user
+      })
+    }
   }
 }
