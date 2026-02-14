@@ -1,6 +1,7 @@
 export { default as PrimaryButton } from './PrimaryButton'
 export { default as SecondaryButton } from './SecondaryButton'
 export { default as Input } from './Input'
+export { default as TextArea } from './TextArea'
 export { default as Label } from './Label'
 export { default as Switch } from './Switch'
 export { default as Panel } from './Panel'
