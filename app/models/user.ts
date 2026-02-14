@@ -9,6 +9,8 @@ const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   passwordColumnName: 'password',
 })
 
+export type UserRole = 'guest' | 'member' | 'moderator' | 'admin' | 'owner';
+
 export default class User extends compose(BaseModel, AuthFinder) {
   @column({ isPrimary: true })
   declare id: number
@@ -20,7 +22,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare displayName: string
 
   @column()
-  declare role: 'guest' | 'member' | 'moderator' | 'admin' | 'owner'
+  declare role: UserRole
 
   @column({ serializeAs: null })
   declare password: string
