@@ -8,7 +8,7 @@ const Label = forwardRef<HTMLLabelElement, LabelProps>(
     return (
       <LabelPrimitive.Root
         ref={ref}
-        className={`text-sm text-neutral-400 font-medium ${className}`}
+        className={`text-sm text-neutral-300 font-medium ${className}`}
         {...props}
       >
         {children}
