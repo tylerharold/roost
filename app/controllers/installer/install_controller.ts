@@ -4,6 +4,7 @@ import UserService from '#services/user_service'
 import ServerService from '#services/server_service'
 import { installValidator } from '#validators/install'
 import db from '@adonisjs/lucid/services/db'
+import inertia from '@adonisjs/inertia/client'
 
 @inject()
 export default class InstallController {
@@ -42,7 +43,13 @@ export default class InstallController {
     return response.redirect().toPath('/')
   }
 
-  public view() {
-    // Render install page (handled by Inertia)
+  public async view({ inertia, response }: HttpContext) {
+    const installed = await this.serverService.isInstalled();
+
+    if (installed) {
+      return response.redirect().toPath('/');
+    }
+
+    return inertia.render('install');
   }
 }
