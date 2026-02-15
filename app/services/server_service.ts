@@ -47,4 +47,9 @@ export default class ServerService {
     const maintenance = await this.getFlag('APP_MAINTENANCE', options)
     return maintenance ?? false
   }
+
+  public async getServerIconPath(options?: { client?: any }): Promise<string> {
+    const path = await this.getSetting('SERVER_ICON', options);
+    return path ?? ""
+  }
 }
