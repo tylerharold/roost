@@ -11,6 +11,12 @@ export const installValidator = vine.compile(
         .string()
         .maxLength(255)
         .optional(),
+      icon: vine
+        .file({
+          size: '5mb',
+          extnames: ['png', 'jpg', 'jpeg', 'gif'],
+        })
+        .optional(),
     }),
     owner: vine.object({
       username: vine
