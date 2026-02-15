@@ -1,18 +1,28 @@
 import { Head, useForm } from '@inertiajs/react'
-import { Input, Label, Panel, PrimaryButton, TextArea } from '~/components/ui'
-import type { FormEvent } from 'react'
+import { FileInput, Input, Label, Panel, PrimaryButton, TextArea } from '~/components/ui'
+import { FormEvent, useState, useEffect } from 'react'
 
 export default function Install() {
   const { data, setData, post, processing, errors, clearErrors } = useForm({
     server: {
       name: '',
       description: '',
+      icon: null as File | null,
     },
     owner: {
       username: '',
       password: '',
     },
   })
+  const [iconPreview, setIconPreview] = useState<string | null>(null)
+
+  useEffect(() => {
+    return () => {
+      if (iconPreview) {
+        URL.revokeObjectURL(iconPreview)
+      }
+    }
+  }, [iconPreview])
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
@@ -52,7 +62,7 @@ export default function Install() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                <Label htmlFor="server_description">Server Description</Label>
+                <Label htmlFor="server_description">Server Description (Optional)</Label>
                 <div className="flex flex-col space-y-1">
                   <TextArea
                     id="server_description"
@@ -65,6 +75,44 @@ export default function Install() {
                   />
                   {errors['server.description'] && (
                     <span className="text-red-400 text-sm">{errors['server.description']}</span>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                <Label htmlFor="server_icon">Server Icon (Optional)</Label>
+                <div className="flex flex-col space-y-1">
+                  <div className="flex items-center gap-4">
+                    <FileInput
+                      id="server_icon"
+                      accept="image/png,image/jpeg,image/jpg,image/gif"
+                      onChange={(e) => {
+                        clearErrors('server.icon' as any)
+                        const file = e.target.files?.[0] ?? null
+                        if (iconPreview) {
+                          URL.revokeObjectURL(iconPreview)
+                        }
+                        if (file) {
+                          setData('server.icon' as any, file)
+                          setIconPreview(URL.createObjectURL(file))
+                        } else {
+                          setData('server.icon' as any, null)
+                          setIconPreview(null)
+                        }
+                      }}
+                    />
+                    {iconPreview && (
+                      <div className="relative w-12 h-12 rounded-full overflow-hidden border border-neutral-700">
+                        <img
+                          src={iconPreview}
+                          alt="Icon preview"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+                  </div>
+                  {(errors as any)['server.icon'] && (
+                    <span className="text-red-400 text-sm">{(errors as any)['server.icon']}</span>
                   )}
                 </div>
               </div>

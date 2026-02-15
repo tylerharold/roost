@@ -1,5 +1,5 @@
 import { Head } from '@inertiajs/react'
-import { Panel } from '~/components/ui'
+import { Avatar, AvatarImage, AvatarFallback, Panel } from '~/components/ui'
 
 type HomeProps = {
   installed: boolean
@@ -18,7 +18,12 @@ export default function Home(props: HomeProps) {
       {props.installed ? (
         <div className="flex flex-col justify-center mx-auto items-center text-center w-full h-screen sm:px-0 px-6">
           <Panel className="sm:w-xl w-full">
-            <img src={props.server!.icon} className="rounded-full" />
+            <Avatar className="h-16 w-16">
+              {props.server!.icon && (
+                <AvatarImage src={props.server!.icon} alt={props.server!.name} />
+              )}
+              <AvatarFallback>{props.server!.name.charAt(0).toUpperCase()}</AvatarFallback>
+            </Avatar>
             <h1 className="text-2xl text-neutral-50 font-bold">{props.server!.name}</h1>
             <p className="text-md text-neutral-100">{props.server!.description}</p>
           </Panel>

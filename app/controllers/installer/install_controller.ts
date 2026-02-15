@@ -1,11 +1,10 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
+import { cuid } from '@adonisjs/core/helpers'
 import UserService from '#services/user_service'
 import ServerService from '#services/server_service'
 import { installValidator } from '#validators/install'
 import db from '@adonisjs/lucid/services/db'
-import app from '@adonisjs/core/services/app'
-import { cuid } from '@adonisjs/core/helpers'
 
 @inject()
 export default class InstallController {
@@ -18,12 +17,11 @@ export default class InstallController {
     const payload = await request.validateUsing(installValidator)
 
     const iconFile = payload.server.icon
-    let iconPath: string | null = null
+    let iconKey: string | null = null
 
     if (iconFile) {
-      await iconFile.move(app.makePath('storage/uploads/server/settings'), {
-        name: `${cuid()}.server-icon.${iconFile.extname}`,
-      })
+      const key = `server/settings/${cuid()}.${iconFile.extname}`
+      await iconFile.moveToDisk(key)
 
       if (!iconFile.isValid) {
         return response.unprocessableEntity({
@@ -31,7 +29,7 @@ export default class InstallController {
         })
       }
 
-      iconPath = `storage/uploads/server/settings/${iconFile.fileName}`
+      iconKey = key
     }
 
     await db.transaction(async (_tx) => {
@@ -53,8 +51,9 @@ export default class InstallController {
         { client: _tx }
       )
 
-      if (iconPath) {
-        await this.serverService.updateSetting('SERVER_ICON', iconPath, { client: _tx })
+      // Persist the Drive key for the server icon
+      if (iconKey) {
+        await this.serverService.updateSetting('SERVER_ICON', iconKey, { client: _tx })
       }
 
       // Update app flags

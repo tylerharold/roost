@@ -15,7 +15,7 @@ export default class HomeController {
     if (installed) {
       const serverName = await this.serverService.getSetting('SERVER_NAME')
       const serverDescription = await this.serverService.getSetting('SERVER_DESCRIPTION')
-      const serverIcon = await this.serverService.getServerIconPath()
+      const serverIcon = await this.serverService.getServerIconUrl()
 
       payload['server'] = {}
       payload['server']['name'] = serverName

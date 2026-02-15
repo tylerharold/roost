@@ -1,5 +1,6 @@
 import ServerSetting from '#models/server_setting'
 import ServerFlag from '#models/server_flag'
+import drive from '@adonisjs/drive/services/main'
 
 export default class ServerService {
   public async getSetting(key: string, options?: { client?: any }): Promise<string | null> {
@@ -48,8 +49,11 @@ export default class ServerService {
     return maintenance ?? false
   }
 
-  public async getServerIconPath(options?: { client?: any }): Promise<string> {
-    const path = await this.getSetting('SERVER_ICON', options);
-    return path ?? ""
+  public async getServerIconUrl(options?: { client?: any }): Promise<string> {
+    const key = await this.getSetting('SERVER_ICON', options)
+    if (!key) {
+      return ''
+    }
+    return await drive.use().getUrl(key)
   }
 }
