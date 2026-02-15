@@ -17,8 +17,8 @@ export default function Home(props: HomeProps) {
 
       {props.installed ? (
         <div className="flex flex-col justify-center mx-auto items-center text-center w-full h-screen sm:px-0 px-6">
-          <Panel className="sm:w-xl w-full">
-            <Avatar className="h-16 w-16">
+          <Panel className="sm:w-xl w-full flex flex-col">
+            <Avatar className="h-16 w-16 flex mx-auto mb-4">
               {props.server!.icon && (
                 <AvatarImage src={props.server!.icon} alt={props.server!.name} />
               )}
