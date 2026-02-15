@@ -4,7 +4,8 @@ import UserService from '#services/user_service'
 import ServerService from '#services/server_service'
 import { installValidator } from '#validators/install'
 import db from '@adonisjs/lucid/services/db'
-import inertia from '@adonisjs/inertia/client'
+import app from '@adonisjs/core/services/app'
+import { cuid } from '@adonisjs/core/helpers'
 
 @inject()
 export default class InstallController {
@@ -14,7 +15,24 @@ export default class InstallController {
   ) {}
 
   public async install({ request, response }: HttpContext) {
-    const payload = await installValidator.validate(request.all())
+    const payload = await request.validateUsing(installValidator)
+
+    const iconFile = payload.server.icon
+    let iconPath: string | null = null
+
+    if (iconFile) {
+      await iconFile.move(app.makePath('storage/uploads/server/settings'), {
+        name: `${cuid()}.server-icon.${iconFile.extname}`,
+      })
+
+      if (!iconFile.isValid) {
+        return response.unprocessableEntity({
+          errors: iconFile.errors,
+        })
+      }
+
+      iconPath = `storage/uploads/server/settings/${iconFile.fileName}`
+    }
 
     await db.transaction(async (_tx) => {
       // Create the owner account
@@ -35,6 +53,10 @@ export default class InstallController {
         { client: _tx }
       )
 
+      if (iconPath) {
+        await this.serverService.updateSetting('SERVER_ICON', iconPath, { client: _tx })
+      }
+
       // Update app flags
       await this.serverService.updateFlag('APP_INSTALLED', true, { client: _tx })
       await this.serverService.updateFlag('APP_MAINTENANCE', false, { client: _tx })
@@ -44,12 +66,12 @@ export default class InstallController {
   }
 
   public async view({ inertia, response }: HttpContext) {
-    const installed = await this.serverService.isInstalled();
+    const installed = await this.serverService.isInstalled()
 
     if (installed) {
-      return response.redirect().toPath('/');
+      return response.redirect().toPath('/')
     }
 
-    return inertia.render('install');
+    return inertia.render('install')
   }
 }
