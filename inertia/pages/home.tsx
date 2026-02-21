@@ -1,5 +1,5 @@
 import { Head } from '@inertiajs/react'
-import { Avatar, AvatarImage, AvatarFallback, Panel } from '~/components/ui'
+import { Avatar, AvatarImage, AvatarFallback, Panel, Link } from '~/components/ui'
 
 type HomeProps = {
   installed: boolean
@@ -26,6 +26,8 @@ export default function Home(props: HomeProps) {
             </Avatar>
             <h1 className="text-2xl text-neutral-50 font-bold">{props.server!.name}</h1>
             <p className="text-md text-neutral-100">{props.server!.description}</p>
+
+            <Link href="/login">Login</Link>
           </Panel>
         </div>
       ) : (
