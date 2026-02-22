@@ -5,11 +5,11 @@ import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
-  uids: ['email'],
+  uids: ['username'],
   passwordColumnName: 'password',
 })
 
-export type UserRole = 'guest' | 'member' | 'moderator' | 'admin' | 'owner';
+export type UserRole = 'guest' | 'member' | 'moderator' | 'admin' | 'owner'
 
 export default class User extends compose(BaseModel, AuthFinder) {
   @column({ isPrimary: true })
