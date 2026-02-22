@@ -1,7 +1,9 @@
 import { Head } from '@inertiajs/react'
 import { Avatar, AvatarImage, AvatarFallback, Panel, Link } from '~/components/ui'
+import { User } from "~/types/user"
 
 type HomeProps = {
+  user: User
   installed: boolean
   server?: {
     name: string
@@ -28,7 +30,11 @@ export default function Home(props: HomeProps) {
               <h1 className="text-2xl text-neutral-50 font-bold">{props.server!.name}</h1>
               <p className="text-md text-neutral-100">{props.server!.description}</p>
 
-              <Link href="/login">Login</Link>
+              {props.user ? (
+                <Link href="/app">Go to app</Link>
+              ) : (
+                <Link href="/login">Login</Link>
+              )}
             </Panel>
           </div>
         </>
@@ -38,7 +44,9 @@ export default function Home(props: HomeProps) {
 
           <div className="flex flex-col justify-center mx-auto items-center text-center w-full h-screen">
             <Panel>
-              <h1 className="text-2xl text-neutral-50 font-bold">Roost is currently unavailable.</h1>
+              <h1 className="text-2xl text-neutral-50 font-bold">
+                Roost is currently unavailable.
+              </h1>
               <p className="text-md text-neutral-100">
                 Please contact your server administrator for more information.
               </p>
