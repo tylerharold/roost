@@ -25,7 +25,11 @@ export default class UserService {
         {
           username: payload.username,
           displayName: payload.username,
-          password: await hash.make(payload.password),
+          // AuthFinder mixin registers a beforeSave hook to automatically hash user passwords
+          // during INSERT & UPDATE calls. Therefore we don't have to manually perform password
+          // hasing in our model here.
+          // https://docs.adonisjs.com/guides/authentication/verifying-user-credentials#hashing-user-password
+          password: payload.password,
           role,
         },
         { client: options.client }
