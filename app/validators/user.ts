@@ -17,6 +17,13 @@ export const createUserValidator = vine.compile(
       .maxLength(64)
       .regex(/^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~`]+$/),
     role: vine
-      .enum(['guest', 'member', 'moderator', 'admin', 'owner'] as const)
+      .enum(['guest', 'member', 'moderator', 'admin', 'owner'] as const),
+  })
+)
+
+export const loginUserValidator = vine.compile(
+  vine.object({
+    username: vine.string(),
+    password: vine.string(),
   })
 )
